@@ -5,10 +5,6 @@ const endSemExamSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'co_attainment'
     },
-    course_year: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'co_attainment'
-    },
     co_attained: {
         type: Double,
         default: 0
