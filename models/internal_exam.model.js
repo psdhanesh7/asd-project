@@ -6,10 +6,6 @@ const internalExamSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'co_attainment'
     },
-    internal_course_year: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'co_attainment'
-    },
     internal_exam_no: {
         type: Number,
         required: true
