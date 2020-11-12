@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 
 const keys = require('./config/keys');
 const authRoutes = require('./routes/authRoutes');
+const facultyRoutes = require('./routes/facultyRoutes');
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(passport.session());
 app.use(express.static(__dirname));
 
 app.use('/auth', authRoutes);
+app.use('/api/faculty', facultyRoutes);
 
 const PORT = process.env.PORT || 5000;
 

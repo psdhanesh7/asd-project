@@ -1,4 +1,6 @@
 const LocalStrategy = require('passport-local').Strategy;
+const db = require('../config/mysql');
+const bcrypt = require('bcrypt');
 
 
 module.exports = function(passport) {
@@ -9,15 +11,18 @@ module.exports = function(passport) {
         },
         async function(username, password, done) {
             try {
-                const user = await User.findOne({ email: username });
+
+                const GET_USER_QUERY = `SELECT * FROM faculty WHERE faculty_email = "${username}"`;
+                const [ rows ] = await db.query(GET_USER_QUERY);
+                const user = rows[0];
+
                 if(!user) return done(null, false);
 
-                user.comparePassword(password, (err, isMatch) => {
-                    if(err) return done(err);
-                    if(!isMatch) return done(null, false, { success: false, message: 'Invalid email or password' });
-
-                    return done(null, { id: user._id, admin: user.admin });
-                });
+                const isMatch = await bcrypt.compare(password, user.faculty_password); 
+                
+                if(!isMatch) return done(null, false, { success: false, message: 'Invalid email or password' });
+                return done(null, { id: user.faculty_id, admin: user.admin });
+                
             } catch(err) {
                 return done(err);
             }
@@ -31,10 +36,15 @@ module.exports = function(passport) {
     passport.deserializeUser(async function(id, next) {
 
         try {
-            const user = await User.findById(id);
+
+            const GET_USER_QUERY = `SELECT * FROM faculty WHERE faculty_id = ${id}`; 
+            const [ rows ] = await db.query(GET_USER_QUERY);
+
+            const user = rows[0];
+
             if(!user) return next(null, false);;
 
-            next(null, { id: user._id, admin: user.admin });
+            next(null, { id: user.faculty_id, admin: user.admin });
         } catch(err) {
             next(err);
         }
