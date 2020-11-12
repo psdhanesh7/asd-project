@@ -43,7 +43,6 @@ module.exports = function(passport) {
             const user = rows[0];
 
             if(!user) return next(null, false);;
-
             next(null, { id: user.faculty_id, admin: user.admin });
         } catch(err) {
             next(err);
