@@ -1,10 +1,26 @@
 const express = require('express');
+const session = require('express-session');
+const passport = require('passport');
+const cookieParser = require('cookie-parser');
+
+const keys = require('./config/keys');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
-app.get('/', (req, res) => {
-    res.send('<h1>Hello World!!</h1>');
-});
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(session({
+    secret: keys.SESSION_SECRET,
+    resave: true, saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(express.static(__dirname));
+
+app.use('/auth', authRoutes);
 
 const PORT = process.env.PORT || 5000;
 

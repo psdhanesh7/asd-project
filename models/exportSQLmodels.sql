@@ -41,26 +41,9 @@ CREATE TABLE `co_po_mapping` (
   CONSTRAINT `code` FOREIGN KEY (`code`) REFERENCES `course` (`course_code`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `course` (
-  `course_code` varchar(45) NOT NULL,
-  `course_name` varchar(60) DEFAULT NULL,
-  `co_no` int DEFAULT NULL,
-  `semester` int DEFAULT NULL,
-  PRIMARY KEY (`course_code`),
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `course_faculty` (
-  `c_code` varchar(45) NOT NULL,
-  `course_year` int DEFAULT NULL,
-  `faculty_id` int DEFAULT NULL,
-  `passout_year` int,
-  PRIMARY KEY (`c_code`, `course_year`, `faculty_id`),
-  KEY `course_faculty_id_idx` (`course_faculty_id`),
-  KEY `course_year_idx` (`c_code`,`course_year`),
-  CONSTRAINT `c_code` FOREIGN KEY (`c_code`) REFERENCES `course` (`course_code`),
-  CONSTRAINT `course_faculty_id` FOREIGN KEY (`course_faculty_id`) REFERENCES `faculty` (`faculty_id`),
-  CONSTRAINT `course_year` FOREIGN KEY (`c_code`, `course_year`) REFERENCES `co_attainment` (`course_code`, `year`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
 
 CREATE TABLE `end_sem_exam` (
   `course_code` varchar(45) NOT NULL,
@@ -91,16 +74,17 @@ CREATE TABLE `internal_exam` (
   CONSTRAINT `internal_course_year` FOREIGN KEY (`internal_course_code`, `internal_course_year`) REFERENCES `co_attainment` (`course_code`, `year`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `student` (
-  `university_reg_no` varchar(45) NOT NULL,
-  `name` varchar(45) DEFAULT NULL,
-  `stud_dept_id` int DEFAULT NULL,
-  `passout_year` int,
-  PRIMARY KEY (`university_reg_no`),
-  KEY `student_dept_id_idx` (`stud_dept_id`),
-  CONSTRAINT `student_dept_id` FOREIGN KEY (`stud_dept_id`) REFERENCES `department` (`dept_id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+
+
+-- ---------------------------------------------------------------------------------------------
+
+
+CREATE TABLE `department` (
+  `dept_id` int NOT NULL AUTO_INCREMENT,
+  `dept_name` varchar(45) NOT NULL,
+  PRIMARY KEY (`dept_id`)
+)ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `faculty` (
   `faculty_id` int NOT NULL AUTO_INCREMENT,
@@ -108,16 +92,37 @@ CREATE TABLE `faculty` (
   `dept_id` int NOT NULL,
   `faculty_email` varchar(45) NOT NULL,
   `faculty_password` varchar(200) NOT NULL,
-  `isadmin` tinyint NOT NULL,
+  `admin` tinyint NOT NULL,
   PRIMARY KEY (`faculty_id`),
   KEY `dept_faculty_idx` (`dept_id`),
   CONSTRAINT `dept_faculty` FOREIGN KEY (`dept_id`) REFERENCES `department` (`dept_id`)
 )ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `student` (
+  `university_reg_no` varchar(45) NOT NULL,
+  `stud_name` varchar(45) DEFAULT NULL,
+  `stud_dept_id` int DEFAULT NULL,
+  `passout_year` int NOT NULL,
+  PRIMARY KEY (`university_reg_no`),
+  KEY `student_dept_id_idx` (`stud_dept_id`),
+  CONSTRAINT `student_dept_id` FOREIGN KEY (`stud_dept_id`) REFERENCES `department` (`dept_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-CREATE TABLE `department` (
-  `dept_id` int NOT NULL AUTO_INCREMENT,
-  `dept_name` varchar(45) NOT NULL,
-  PRIMARY KEY (`dept_id`),
-)ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `course` (
+  `course_code` varchar(45) NOT NULL,
+  `course_name` varchar(60) DEFAULT NULL,
+  `no_of_cos` int DEFAULT NULL,
+  `semester` int DEFAULT NULL,
+  PRIMARY KEY (`course_code`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `course_faculty` (
+  `course_code` varchar(45) NOT NULL,
+  `course_year` int  NOT NULL,
+  `faculty_id` int  NOT NULL,
+  `passout_year` int,
+  CONSTRAINT `c_code` FOREIGN KEY (`course_code`) REFERENCES `course` (`course_code`),
+  CONSTRAINT `course_faculty_id` FOREIGN KEY (`faculty_id`) REFERENCES `faculty` (`faculty_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
