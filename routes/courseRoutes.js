@@ -111,4 +111,19 @@ router.delete('/:courseCode', async (req, res) => {
 
 });
 
+router.post('/assignfaculty', async (req, res) => {
+    
+    const { courseCode } = req.query;
+    const { facultyId, passoutYear, courseYear } = req.body;
+
+    try {
+        const ASSIGN_FACULTY_QUERY = `INSERT INTO course_faculty VALUES ("${courseCode}", ${courseYear}, ${facultyId}, ${passoutYear})`;
+        await db.query(ASSIGN_FACULTY_QUERY);
+
+        res.send({ success: true, message: 'Faculty succesfully assigned' });
+    } catch (err) {
+        res.send({ success: false, message: err.message });
+    }
+});
+
 module.exports = router;
