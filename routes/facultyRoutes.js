@@ -57,7 +57,7 @@ router.get('/:facultyId', async (req, res) => {
 router.delete('/:facultyId', async (req, res) => {
 
     const { facultyId } = req.params;
-    const DELETE_FACULTY_QUERY = `DELETE FROM facylty WHERE faculty_id=${facultyId}`;
+    const DELETE_FACULTY_QUERY = `DELETE FROM faculty WHERE faculty_id=${facultyId}`;
 
     try {
         await db.query(DELETE_FACULTY_QUERY);

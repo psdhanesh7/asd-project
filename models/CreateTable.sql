@@ -49,3 +49,12 @@ CREATE TABLE `course_faculty` (
   CONSTRAINT `course_faculty_id` FOREIGN KEY (`faculty_id`) REFERENCES `faculty` (`faculty_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+
+CREATE TABLE `co_po_mapping` (
+  `course_code` varchar(45) NOT NULL,
+  `co` int NOT NULL,
+  `po` int NOT NULL,
+  `relation` int DEFAULT NULL,
+  PRIMARY KEY (`course_code`,`co`,`po`),
+  CONSTRAINT `code` FOREIGN KEY (`course_code`) REFERENCES `course` (`course_code`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

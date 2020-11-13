@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const passport = require('passport');
-const db = require('../config/mysql');
 
 require('../services/passport')(passport);
 
