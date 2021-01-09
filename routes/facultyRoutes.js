@@ -4,10 +4,11 @@ const bcrypt = require('bcrypt');
 
 router.post('/', async (req, res) => {
     
+    // The following info need to added to the faculty table.
+    // name, address, dob, contact, gender, facultyId
     const { name, dept, email, password, admin } = req.body;
     
     try {
-
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt, null);
 
@@ -53,6 +54,12 @@ router.get('/:facultyId', async (req, res) => {
         res.send({ success: false, message: err.message });
     }
 });
+
+// Edit faculty
+router.put('/:facultyId', async (req, res) => {
+    
+    const { facultyId } = req.params;
+})
 
 router.delete('/:facultyId', async (req, res) => {
 

@@ -3,17 +3,24 @@ const db = require('../config/mysql');
 
 router.get('/', async (req, res) => {
 
-    const { deptId } = req.query;
+    const { deptId, facultyId } = req.query;
+    let GET_COURSES_QUERY = `SELECT * FROM course`;
+
+    if(deptId) {
+        GET_COURSES_QUERY = `SELECT * FROM course WHERE dept_id = ${deptId}`;
+    } else if(facultyId) {
+        GET_COURSES_QUERY = `SELECT * FROM course, course_faculty WHERE faculty_id = ${facultyId}`;
+    }
 
     try {
-        const GET_COURSES_QUERY = deptId ? `SELECT * FROM course WHERE dept_id = ${deptId}` : `SELECT * FROM course`;
         const [ courses ] = await db.query(GET_COURSES_QUERY);
 
-        res.send({ success: true, courses });
+        return res.send({ success: true, courses });
 
     } catch (err) {
-        res.send({ success: false, message: err.message });
+        return res.send({ success: false, message: err.message });
     }
+    
 });
 
 router.get('/:courseCode', async (req, res) => {
