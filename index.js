@@ -7,6 +7,9 @@ const keys = require('./config/keys');
 const authRoutes = require('./routes/authRoutes');
 const facultyRoutes = require('./routes/facultyRoutes');
 const courseRoutes = require('./routes/courseRoutes');
+const studentRoutes = require('./routes/studentRoutes');
+
+global.__basedir = __dirname;
 
 const app = express();
 
@@ -25,6 +28,7 @@ app.use(express.static(__dirname));
 app.use('/auth', authRoutes);
 app.use('/api/faculty', facultyRoutes);
 app.use('/api/course', courseRoutes);
+app.use('/api/student', studentRoutes);
 
 const PORT = process.env.PORT || 5000;
 

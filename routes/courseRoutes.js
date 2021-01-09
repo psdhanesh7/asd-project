@@ -75,7 +75,8 @@ router.post('/', async (req, res) => {
         }
     }
 
-    // console.log(records);
+    console.log("hii")
+    console.log(records);
 
     const ADD_COURSE_QUERY = `INSERT INTO course(course_code, course_name, no_of_cos, dept_id, semester) VALUES (?, ?, ?, ?, ?)`;
     const values = [courseCode, courseName, numberOfCos, deptId, semester];
