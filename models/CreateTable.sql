@@ -89,6 +89,7 @@ CREATE TABLE `internal_exam_marks` (
   `year` int NOT NULL,
   `university_reg_no` varchar(10) NOT NULL,
   `exam_no` int NOT NULL,
+  `batch` int DEFAULT NULL,
   `co1` int DEFAULT NULL,
   `co2` int DEFAULT NULL,
   `co3` int DEFAULT NULL,
@@ -100,6 +101,32 @@ CREATE TABLE `internal_exam_marks` (
   CONSTRAINT `fk_internal_exam_marks_1` FOREIGN KEY (`course_code`, `year`) REFERENCES `course_faculty` (`course_code`, `course_year`),
   CONSTRAINT `fk_internal_exam_marks_2` FOREIGN KEY (`university_reg_no`) REFERENCES `student` (`university_reg_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `assignment_marks` (
+  `course_code` varchar(10) NOT NULL,
+  `year` int NOT NULL,
+  `university_reg_no` varchar(10) NOT NULL,
+  `assignment_no` int NOT NULL,
+  `batch` int DEFAULT NULL,
+  `co1` int DEFAULT NULL,
+  `co2` int DEFAULT NULL,
+  `co3` int DEFAULT NULL,
+  `co4` int DEFAULT NULL,
+  `co5` int DEFAULT NULL,
+  `co6` int DEFAULT NULL,
+  PRIMARY KEY (`course_code`,`year`,`university_reg_no`,`assignment_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `end_sem_exam_marks` (
+  `course_code` varchar(10) NOT NULL,
+  `year` int NOT NULL,
+  `university_reg_no` varchar(10) NOT NULL,
+  `batch` int DEFAULT NULL,
+  `grade` varchar(3) DEFAULT NULL,
+  PRIMARY KEY (`course_code`,`year`,`university_reg_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
 
 
 

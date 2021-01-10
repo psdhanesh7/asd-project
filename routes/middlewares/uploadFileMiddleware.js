@@ -13,7 +13,8 @@ const storage = multer.diskStorage({
         cb(null, __basedir + "/public/static/assets/uploads")
     },
     filename: (req, file, cb) => {
-        console.log(file.originalname);
+        // console.log(file.originalname);
+        // console.log(file.mimetype);
         cb(null, `${Date.now()}-bezkoder-${file.originalname}`);
     },
 });
