@@ -1,7 +1,5 @@
 const multer = require("multer");
 
-console.log(__dirname);
-
 const excelFilter = (req, file, cb) => {
     if (file.mimetype.includes("excel") || file.mimetype.includes("spreadsheetml")) {
         cb(null, true);

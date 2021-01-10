@@ -8,6 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const facultyRoutes = require('./routes/facultyRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const studentRoutes = require('./routes/studentRoutes');
+const markRoutes = require('./routes/markRoutes');
 
 global.__basedir = __dirname;
 
@@ -29,6 +30,7 @@ app.use('/auth', authRoutes);
 app.use('/api/faculty', facultyRoutes);
 app.use('/api/course', courseRoutes);
 app.use('/api/student', studentRoutes);
+app.use('/api/marks', markRoutes);
 
 const PORT = process.env.PORT || 5000;
 

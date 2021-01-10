@@ -58,3 +58,48 @@ CREATE TABLE `co_po_mapping` (
   PRIMARY KEY (`course_code`,`co`,`po`),
   CONSTRAINT `code` FOREIGN KEY (`course_code`) REFERENCES `course` (`course_code`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+SELECT `course`.`course_code`,
+    `course`.`course_name`,
+    `course`.`no_of_cos`,
+    `course`.`semester`,
+    `course`.`dept_id`
+FROM `asd_lab`.`course`;
+
+CREATE TABLE `student_enrollment` (
+  `university_reg_no` varchar(10) NOT NULL,
+  `course_code` varchar(10) NOT NULL,
+  `year` int NOT NULL,
+  `batch` int DEFAULT NULL,
+  `series_1_marks` int DEFAULT NULL,
+  `series_2_marks` int DEFAULT NULL,
+  `assignment_1_marks` int DEFAULT NULL,
+  `assignment_2_marks` int DEFAULT NULL,
+  `end_sem_exam_marks` int DEFAULT NULL,
+  PRIMARY KEY (`university_reg_no`,`course_code`,`year`),
+  KEY `fk_student_enrollement_2_idx` (`course_code`,`year`),
+  CONSTRAINT `fk_student_enrollement_1` FOREIGN KEY (`university_reg_no`) REFERENCES `student` (`university_reg_no`),
+  CONSTRAINT `fk_student_enrollement_2` FOREIGN KEY (`course_code`, `year`) REFERENCES `course_faculty` (`course_code`, `course_year`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `internal_exam_marks` (
+  `course_code` varchar(10) NOT NULL,
+  `year` int NOT NULL,
+  `university_reg_no` varchar(10) NOT NULL,
+  `exam_no` int NOT NULL,
+  `co1` int DEFAULT NULL,
+  `co2` int DEFAULT NULL,
+  `co3` int DEFAULT NULL,
+  `co4` int DEFAULT NULL,
+  `co5` int DEFAULT NULL,
+  `co6` int DEFAULT NULL,
+  PRIMARY KEY (`course_code`,`year`,`university_reg_no`,`exam_no`),
+  KEY `fk_internal_exam_marks_2_idx` (`university_reg_no`),
+  CONSTRAINT `fk_internal_exam_marks_1` FOREIGN KEY (`course_code`, `year`) REFERENCES `course_faculty` (`course_code`, `course_year`),
+  CONSTRAINT `fk_internal_exam_marks_2` FOREIGN KEY (`university_reg_no`) REFERENCES `student` (`university_reg_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
