@@ -31,7 +31,7 @@ function calculateCOPO(){
     let copomatrix = [];
     let record = [];
     
-    
+
 
     try {
         copomatrix  = await db.query(FETCH_CO_PO_MAPPING_QUERY);
@@ -62,7 +62,7 @@ function calculateCOPO(){
             divSum += copomatrix[i].relation;
             continue;
         }
-        finalpos.push(interSum);
+        finalpos.push(interSum / divSum);
         interSum = copomatrix[i].relation * covalues[i % 6];
         divSum = copomatrix[i].relation; 
     }
