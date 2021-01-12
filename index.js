@@ -9,6 +9,8 @@ const facultyRoutes = require('./routes/facultyRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const studentRoutes = require('./routes/studentRoutes');
 const markRoutes = require('./routes/markRoutes');
+const assignmentRoutes = require('./routes/assignmentRoutes');
+const internalExamRoutes = require('./routes/internalExamRoutes');
 
 global.__basedir = __dirname;
 
@@ -31,6 +33,8 @@ app.use('/api/faculty', facultyRoutes);
 app.use('/api/course', courseRoutes);
 app.use('/api/student', studentRoutes);
 app.use('/api/marks', markRoutes);
+app.use('/api/assignment', assignmentRoutes);
+app.use('/api/internalexam', internalExamRoutes);
 
 const PORT = process.env.PORT || 5000;
 
