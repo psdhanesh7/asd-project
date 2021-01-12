@@ -1,3 +1,4 @@
+const passport = require("passport");
 const db = require("../config/mysql");
 
 function calcGrade(grade){
@@ -84,4 +85,56 @@ function calculateCOPO(){
         console.log(error);
         res.status(500).send({ success: false, message: err.message });
     }
+}
+
+function COConsolidation(){
+    const {courseCode, passoutYear} = req.body;
+    
+    const FETCH_CONSOLIDATED_IA1_QUERY = `SELECT AVG(co1), AVG(co2), AVG(co3), AVG(co4), AVG(co5), AVG(co6) FROM internal_exam_marks WHERE course_code = "${courseCode}" AND batch = ${passoutYear} AND exam_no = 1`;
+    const FETCH_CONSOLIDATED_IA2_QUERY = `SELECT AVG(co1), AVG(co2), AVG(co3), AVG(co4), AVG(co5), AVG(co6) FROM internal_exam_marks WHERE course_code = "${courseCode}" AND batch = ${passoutYear} AND exam_no = 2`;
+    const FETCH_CONSOLIDATED_ASMT1_QUERY = `SELECT AVG(co1), AVG(co2), AVG(co3), AVG(co4), AVG(co5), AVG(co6) FROM assignment_marks WHERE course_code = "${courseCode}" AND batch = ${passoutYear} AND assignment_no = 1`;
+    const FETCH_CONSOLIDATED_ASMT2_QUERY = `SELECT AVG(co1), AVG(co2), AVG(co3), AVG(co4), AVG(co5), AVG(co6) FROM assignment_marks WHERE course_code = "${courseCode}" AND batch = ${passoutYear} AND assignment_no = 2`;
+    const FETCH_CONSOLIDATED_ES_QUERY = `SELECT grade FROM end_sem_exam_marks WHERE course_code = "${courseCode}" AND batch = ${passoutYear}`;
+
+    const internalExam1 = []
+    const internalExam2 = []
+    const assignment1 = []
+    const assignment2 = []
+    const endSemGrades = []
+
+    try{
+        internalExam1 = await db.query(FETCH_CONSOLIDATED_IA1_QUERY);
+        internalExam2 = await db.query(FETCH_CONSOLIDATED_IA2_QUERY);
+        assignment1 = await db.query(FETCH_CONSOLIDATED_ASMT1_QUERY);
+        assignment2 = await db.query(FETCH_CONSOLIDATED_ASMT2_QUERY);
+        endSemGrades = await db.query(FETCH_CONSOLIDATED_ES_QUERY);
+    }catch(err){
+        return res.send({ success: false, message: err.message });
+    }
+
+    
+
+    // Evaluating End Sem CO
+
+    let passPercent = 0;
+    for(let i = 0 ; i < endSemGrades.length ; i++)
+    {
+        if(calcGrade(endSemGrades[i]) >= 60)
+            passPercent++; 
+    }
+
+    passParcent /= endSemGrades.length;
+
+    let endSemCO = 0;
+    if(passPercent < 0.6)
+        endSemCO = 0;
+    else if(passPercent >= 0.6 && passPercent < 0.7)
+        endSemCO = 1;
+    else if(passPercent >= 0.7 && passPercent < 0.8)
+        endSemCO = 2;
+    else 
+        endSemCO = 3;
+
+
+
 }
