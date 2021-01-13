@@ -20,7 +20,30 @@ function calcGrade(grade){
 }
 
 
+function arrayer(coValues) {
+    const coArray = [];
+    coArray.push(coValues.co1);
+    coArray.push(coValues.co2);
+    coArray.push(coValues.co3);
+    coArray.push(coValues.co4);
+    coArray.push(coValues.co5);
+    coArray.push(coValues.co6);
+
+    return coArray;
+}
+
 //You can add route as you wish
+
+function avgArray(coArray1, coArray2, multiplier) {
+    const resultArray = [];
+    for(let i = 0 ; i < 6 ; i++) {
+        if(coArray1[i] == 0 || coArray2[i] == 0)
+            resultArray.push(coArray1[i] + coArray2[i]);
+        else
+            resultArray.push(coArray1[i] * multiplier + coArray2[i] * (1 - multiplier));
+    }
+    return avgArray;
+}
 
 
 function calculateCOPO(){
@@ -44,15 +67,9 @@ function calculateCOPO(){
 
     // Converting query to array form
 
-    let covalues = [];
-    covalues.push(record[0].co1);
-    covalues.push(record[0].co2);
-    covalues.push(record[0].co3);
-    covalues.push(record[0].co4);
-    covalues.push(record[0].co5);
-    covalues.push(record[0].co6);
+    const covalues = arrayer(record[0]);
 
-    let finalpos = []; //Contains final po values
+    const finalpos = []; //Contains final po values
 
     let interSum = 0, divSum = 0, matrixlen = copomatrix.length;
     for(let i = 0 ; i < matrixlen; i++)
@@ -96,11 +113,11 @@ function COConsolidation(){
     const FETCH_CONSOLIDATED_ASMT2_QUERY = `SELECT AVG(co1), AVG(co2), AVG(co3), AVG(co4), AVG(co5), AVG(co6) FROM assignment_marks WHERE course_code = "${courseCode}" AND batch = ${passoutYear} AND assignment_no = 2`;
     const FETCH_CONSOLIDATED_ES_QUERY = `SELECT grade FROM end_sem_exam_marks WHERE course_code = "${courseCode}" AND batch = ${passoutYear}`;
 
-    const internalExam1 = []
-    const internalExam2 = []
-    const assignment1 = []
-    const assignment2 = []
-    const endSemGrades = []
+    let internalExam1 = []
+    let internalExam2 = []
+    let assignment1 = []
+    let assignment2 = []
+    let endSemGrades = []
 
     try{
         internalExam1 = await db.query(FETCH_CONSOLIDATED_IA1_QUERY);
@@ -112,7 +129,14 @@ function COConsolidation(){
         return res.send({ success: false, message: err.message });
     }
 
-    
+    // Evaluating Continuous Evaluation CO
+
+    internalExam1 = arrayer(internalExam1[0]);
+    internalExam2 = arrayer(internalExam2[0]);
+    assignment1 = arrayer(assignment1[0]);
+    assignment2 = arrayer(assignment2[0]);
+
+    const continousEval = avgArray(avgArray(internalExam1, internalExam2, 0.5), avgArray(assignment1, assignment2, 0,5), 0.6);
 
     // Evaluating End Sem CO
 
@@ -135,6 +159,11 @@ function COConsolidation(){
     else 
         endSemCO = 3;
 
+    const endSemValues = [endSemCO, endSemCO, endSemCO, endSemCO, endSemCO, endSemCO];
+
+    // Evaluating Final CO Attainment
+
+    const finalValues = avgArray(endSemValues, continousEval, 0.6); // Final value array contains consolidated COs
 
 
 }
