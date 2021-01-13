@@ -134,4 +134,21 @@ router.post('/assignfaculty', async (req, res) => {
     }
 });
 
+router.delete('/unassignfaculty', async (req, res) => {
+
+    const { ids } = req.body;
+
+    try {
+        const UNASSIGN_FACULTY_QUERY = `DELETE FROM course_faculty
+            WHERE id IN (${ids})`;
+
+        await db.query(UNASSIGN_FACULTY_QUERY);
+
+        return res.send({ success: true, message: 'Faculty unassigned succesfully' });
+
+    } catch (err) {
+        return res.send({ success: false, message: err.message });
+    }
+})
+
 module.exports = router;
