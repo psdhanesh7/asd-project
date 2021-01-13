@@ -127,6 +127,40 @@ CREATE TABLE `end_sem_exam_marks` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
+CREATE TABLE `assignment` (
+  `assignment_id` int NOT NULL AUTO_INCREMENT,
+  `course_code` varchar(10) NOT NULL,
+  `year` int NOT NULL,
+  `assignment_no` int NOT NULL,
+  `batch` int DEFAULT NULL,
+  `co1` int DEFAULT '0',
+  `co2` int DEFAULT '0',
+  `co3` int DEFAULT '0',
+  `co4` int DEFAULT '0',
+  `co5` int DEFAULT '0',
+  `co6` int DEFAULT '0',
+  PRIMARY KEY (`course_code`,`year`,`assignment_no`),
+  KEY `key2` (`assignment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `internal_exam` (
+  `internal_exam_id` int NOT NULL AUTO_INCREMENT,
+  `course_code` varchar(10) NOT NULL,
+  `year` int NOT NULL,
+  `internal_exam_no` int NOT NULL,
+  `batch` int DEFAULT NULL,
+  `co1` int DEFAULT NULL,
+  `co2` int DEFAULT NULL,
+  `co3` int DEFAULT NULL,
+  `co4` int DEFAULT NULL,
+  `co5` int DEFAULT NULL,
+  `co6` int DEFAULT NULL,
+  PRIMARY KEY (`course_code`,`year`,`internal_exam_no`),
+  KEY `key2` (`internal_exam_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
 
 
 
