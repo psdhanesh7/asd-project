@@ -6,13 +6,11 @@ router.get('/', async (req, res) => {
     const { semester, batch } = req.query;
     let GET_COURSES_QUERY = `SELECT * FROM course`;
 
-    if(deptId) {
-        GET_COURSES_QUERY = `SELECT * FROM course WHERE semester = ${semester}`;
-    } else if(facultyId) {
-        GET_COURSES_QUERY = `SELECT * FROM course INNER JOIN course_faculty ON course.course_code = course_faculty.course_code WHERE passout_year = ${batch}`;
-    }
+    if(semester && batch) {
+        GET_COURSES_QUERY = `SELECT * FROM course INNER JOIN course_faculty ON course.course_code = course_faculty.course_code WHERE semester = ${semester} and passout_year = ${batch}`;
+    } 
 
-    try {
+    try{
         const [ courses ] = await db.query(GET_COURSES_QUERY);
         return res.send({ success: true, courses });
 
