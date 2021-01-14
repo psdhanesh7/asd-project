@@ -3,18 +3,17 @@ const db = require('../config/mysql');
 
 router.get('/', async (req, res) => {
 
-    const { deptId, facultyId } = req.query;
+    const { semester, batch } = req.query;
     let GET_COURSES_QUERY = `SELECT * FROM course`;
 
     if(deptId) {
-        GET_COURSES_QUERY = `SELECT * FROM course WHERE dept_id = ${deptId}`;
+        GET_COURSES_QUERY = `SELECT * FROM course WHERE semester = ${semester}`;
     } else if(facultyId) {
-        GET_COURSES_QUERY = `SELECT * FROM course, course_faculty WHERE faculty_id = ${facultyId}`;
+        GET_COURSES_QUERY = `SELECT * FROM course INNER JOIN course_faculty ON course.course_code = course_faculty.course_code WHERE passout_year = ${batch}`;
     }
 
     try {
         const [ courses ] = await db.query(GET_COURSES_QUERY);
-
         return res.send({ success: true, courses });
 
     } catch (err) {
