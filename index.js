@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 const keys = require('./config/keys');
 const authRoutes = require('./routes/authRoutes');
@@ -16,6 +17,7 @@ global.__basedir = __dirname;
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

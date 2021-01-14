@@ -41,13 +41,20 @@ CREATE TABLE `course` (
 
 
 CREATE TABLE `course_faculty` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `course_code` varchar(45) NOT NULL,
-  `course_year` int  NOT NULL,
-  `faculty_id` int  NOT NULL,
-  `passout_year` int,
+  `course_year` int NOT NULL,
+  `faculty_id` int NOT NULL,
+  `passout_year` int DEFAULT NULL,
+  `threshold` decimal(4,2) DEFAULT NULL,
+  `target` int DEFAULT NULL,
+  PRIMARY KEY (`course_code`,`course_year`,`faculty_id`),
+  KEY `course_faculty_id` (`faculty_id`),
+  KEY `key2` (`id`),
   CONSTRAINT `c_code` FOREIGN KEY (`course_code`) REFERENCES `course` (`course_code`),
   CONSTRAINT `course_faculty_id` FOREIGN KEY (`faculty_id`) REFERENCES `faculty` (`faculty_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 
 CREATE TABLE `co_po_mapping` (

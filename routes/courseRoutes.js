@@ -12,6 +12,7 @@ router.get('/', async (req, res) => {
 
     try{
         const [ courses ] = await db.query(GET_COURSES_QUERY);
+        console.log(courses);
         return res.send({ success: true, courses });
 
     } catch (err) {
