@@ -2,17 +2,15 @@ const router = require('express').Router();
 const db = require('../config/mysql');
 
 router.get('/', async (req, res) => {
-
-    const { semester, batch } = req.query;
+    const { semester, batch } = req.body;
     let GET_COURSES_QUERY = `SELECT * FROM course`;
-
+    console.log(req.body);
     if(semester && batch) {
         GET_COURSES_QUERY = `SELECT * FROM course INNER JOIN course_faculty ON course.course_code = course_faculty.course_code WHERE semester = ${semester} and passout_year = ${batch}`;
     } 
 
     try{
         const [ courses ] = await db.query(GET_COURSES_QUERY);
-        console.log(courses);
         return res.send({ success: true, courses });
 
     } catch (err) {
@@ -119,11 +117,12 @@ router.delete('/:courseCode', async (req, res) => {
 
 router.post('/assignfaculty', async (req, res) => {
     
-    const { courseCode } = req.query;
+    const { courseCode } = req.body;
     const { facultyId, passoutYear, courseYear } = req.body;
-
     try {
-        const ASSIGN_FACULTY_QUERY = `INSERT INTO course_faculty VALUES ("${courseCode}", ${courseYear}, ${facultyId}, ${passoutYear})`;
+        console.log(courseCode);
+        const ASSIGN_FACULTY_QUERY = `INSERT INTO course_faculty(course_code, course_year, faculty_id, passout_year) VALUES("${courseCode}", ${courseYear}, ${facultyId}, ${passoutYear})`;
+        console.log(ASSIGN_FACULTY_QUERY);
         await db.query(ASSIGN_FACULTY_QUERY);
 
         res.send({ success: true, message: 'Faculty succesfully assigned' });
