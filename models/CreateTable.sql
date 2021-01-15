@@ -66,6 +66,15 @@ CREATE TABLE `co_po_mapping` (
   CONSTRAINT `code` FOREIGN KEY (`course_code`) REFERENCES `course` (`course_code`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `co_pso_mapping` (
+  `course_code` varchar(45) NOT NULL,
+  `co` int NOT NULL,
+  `pso` int NOT NULL,
+  `relation` int DEFAULT NULL,
+  PRIMARY KEY (`course_code`,`co`,`pso`),
+  CONSTRAINT `psocode` FOREIGN KEY (`course_code`) REFERENCES `course` (`course_code`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 SELECT `course`.`course_code`,
     `course`.`course_name`,
