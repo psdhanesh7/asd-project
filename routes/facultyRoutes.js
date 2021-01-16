@@ -24,8 +24,8 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
 
     const { deptId } = req.query;
-    const GET_FACULTY_QUERY = deptId ? `SELECT faculty_id, faculty_name  FROM faculty WHERE dept_id = ${deptId}` : `SELECT faculty_id, faculty_name, dept_id FROM faculty`;
-
+    const GET_FACULTY_QUERY = deptId ? `SELECT faculty_id, faculty_name  FROM faculty WHERE dept_id = ${deptId}` : 
+                                       `SELECT faculty_id, faculty_name, faculty_email, dept_name FROM faculty INNER JOIN department on faculty.dept_id = department.dept_id`;
     try {
         const [ faculty ] = await db.query(GET_FACULTY_QUERY);
 
