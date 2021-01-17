@@ -22,22 +22,33 @@ function calcGrade(grade){
 
 function arrayer(coValues) {
     const coArray = [];
-    coArray.push(coValues.co1);
-    coArray.push(coValues.co2);
-    coArray.push(coValues.co3);
-    coArray.push(coValues.co4);
-    coArray.push(coValues.co5);
-    coArray.push(coValues.co6);
+    for(let i = 0; i < coValues.length ; i++)
+    {
+        coArray[i * 6 + 0] = coValues[i].co1;
+        coArray[i * 6 + 1] = coValues[i].co2;
+        coArray[i * 6 + 2] = coValues[i].co3;
+        coArray[i * 6 + 3] = coValues[i].co4;
+        coArray[i * 6 + 4] = coValues[i].co5;
+        coArray[i * 6 + 5] = coValues[i].co6;
+    }
     return coArray;
+}
+
+function matrixer(copomatrix) {
+    const matrix = [];
+    for(let i = 0 ; i < copomatrix.length ; i++)
+    {
+        matrix[i].push
+    }
 }
 
 //PO Consolidation Part
 
 function calculateCOPO(){
 
-    const {courseCode, passoutYear} = req.body;
-    const FETCH_CO_VALUES_QUERY = `SELECT * FROM co_attainment where course_code = "${courseCode}" and year = "${passoutYear}"`;
-    const FETCH_CO_PO_MAPPING_QUERY = `SELECT relation FROM co_po_mapping  where course_code = "${courseCode} ORDER BY po, co"`;
+    const {passoutYear} = req.query;
+    const FETCH_CO_VALUES_QUERY = `SELECT * FROM co_attainment where year = "${passoutYear} ORDER by course_code"`;
+    const FETCH_CO_PO_MAPPING_QUERY = `SELECT relation FROM co_po_mapping ORDER BY course_code, po, co"`;
     
     let copomatrix = [];
     let record = [];
@@ -48,12 +59,14 @@ function calculateCOPO(){
        const [record] = await db.query(FETCH_CO_VALUES_QUERY);
         // Converting query to array form
 
-        const covalues = arrayer(record[0]);
+        const covalues = arrayer(record);
 
         const finalpos = []; //Contains final po values
 
-        let interSum = 0, divSum = 0, matrixlen = copomatrix.length;
-        for(let i = 0 ; i < matrixlen; i++)
+        let matrixlen = copomatrix.length;
+        let interSum = copomatrix[0].relation * covalues[0];
+        let divSum = copomatrix[0].relation; 
+        for(let i = 1 ; i < matrixlen; i++)
         {
             if(i % 6 && i != matrixlen - 1)
             {
@@ -81,18 +94,6 @@ function calculateCOPO(){
         console.log(error);
         res.status(500).send({ success: false, message: err.message });
     }
-}
-
-
-function avgArray(coArray1, coArray2, multiplier) {
-    const resultArray = [];
-    for(let i = 0 ; i < 6 ; i++) {
-        if(coArray1[i] == 0 || coArray2[i] == 0)
-            resultArray.push(coArray1[i] + coArray2[i]);
-        else
-            resultArray.push(coArray1[i] * multiplier + coArray2[i] * (1 - multiplier));
-    }
-    return avgArray;
 }
 
 // CO Consolidation Part
