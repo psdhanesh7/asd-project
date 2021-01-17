@@ -5,6 +5,7 @@ const upload = require('./middlewares/uploadFileMiddleware');
 
 router.get('/', async (req, res) => {
     
+    
     const { deptId, batch } = req.params;
     // if(!deptId || !batch) return res.send({ success: false, message: 'Department or batch year missing' });
 

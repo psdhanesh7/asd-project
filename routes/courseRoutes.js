@@ -33,7 +33,10 @@ router.get('/', async (req, res) => {
 
 router.get('/:courseCode', async (req, res) => {
 
+    // console.log('Request recieved')
+
     const { courseCode } = req.params;
+    // console.log(courseCode)
 
     try {
         const GET_COURSE_DETAILS_QUERY = `SELECT * FROM course WHERE course_code = "${courseCode}"`;
@@ -55,7 +58,7 @@ router.get('/:courseCode', async (req, res) => {
         copoRecords.forEach(copo => {
             copoMatrix[copo.co - 1].push(copo.relation);
         });
-
+        // console.log('Matrix fetch completed')
         res.send({ success: true, course, copoMatrix });
     } catch (err) {
         res.send({ success: false, message: err.message });
