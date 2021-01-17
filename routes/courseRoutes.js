@@ -1,8 +1,21 @@
 const router = require('express').Router();
 const db = require('../config/mysql');
 
+
 router.get('/', async (req, res) => {
-    const { semester, batch } = req.query;
+    const { semester, batch, facultyId } = req.query;
+
+    if(facultyId) {
+        try {
+            const GET_COURSES_QUERY = `SELECT course_code, course_name FROM course_faculty NATURAL JOIN course WHERE faculty_id = ${facultyId}`;
+
+            const [ courses ] = await db.query(GET_COURSES_QUERY);
+            return res.send({ success: true, courses });
+        } catch(err) {
+            return res.send({ success: false, message: err.message });
+        } 
+    }
+
     let GET_COURSES_QUERY = `SELECT * FROM course`;
     if(semester && batch) {
         GET_COURSES_QUERY = `SELECT * FROM course INNER JOIN course_faculty ON course.course_code = course_faculty.course_code WHERE semester = ${semester} and passout_year = ${batch}`;
