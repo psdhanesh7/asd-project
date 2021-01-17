@@ -175,8 +175,32 @@ CREATE TABLE `internal_exam` (
   KEY `key2` (`internal_exam_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `co_attainment` (
+  `course_code` varchar(10) NOT NULL,
+  `batch` int NOT NULL,
+  `co1` int DEFAULT '0',
+  `co2` int DEFAULT '0',
+  `co3` int DEFAULT '0',
+  `co4` int DEFAULT '0',
+  `co5` int DEFAULT '0',
+  `co6` int DEFAULT '0',
+  PRIMARY KEY (`course_code`,`batch`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-
-
-
+CREATE TABLE `po_attainment` (
+  `batch` int NOT NULL,
+  `po1` int DEFAULT '0',
+  `po2` int DEFAULT '0',
+  `po3` int DEFAULT '0',
+  `po4` int DEFAULT '0',
+  `po5` int DEFAULT '0',
+  `po6` int DEFAULT '0',
+  `po7` int DEFAULT '0',
+  `po8` int DEFAULT '0',
+  `po9` int DEFAULT '0',
+  `po10` int DEFAULT '0',
+  `po11` int DEFAULT '0',
+  `po12` int DEFAULT '0',
+  PRIMARY KEY (`batch`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

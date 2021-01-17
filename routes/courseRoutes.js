@@ -1,6 +1,26 @@
 const router = require('express').Router();
 const db = require('../config/mysql');
 
+function arrayer(coValues) {
+    const coArray = [];
+    for(let i = 0; i < coValues.length ; i++)
+    {
+        coArray.push(coValues[i].co1);
+        coArray.push(coValues[i].co2);
+        coArray.push(coValues[i].co3);
+        coArray.push(coValues[i].co4);
+        coArray.push(coValues[i].co5);
+        coArray.push(coValues[i].co6);
+    }
+    return coArray;
+}
+
+function matrixer(copomatrix) {
+    const matrix = [];
+    for(let i = 0 ; i < copomatrix.length; i++)
+        matrix.push(copomatrix[i].relation);
+    return matrix;
+}
 
 router.get('/', async (req, res) => {
     const { semester, batch, facultyId } = req.query;
@@ -157,5 +177,48 @@ router.delete('/unassignfaculty', async (req, res) => {
         return res.send({ success: false, message: err.message });
     }
 })
+
+router.post('/postpo', async (req, res) => {
+
+    // PO attainment completed
+
+    const {passoutYear} = req.query;
+    const FETCH_CO_VALUES_QUERY = `SELECT * FROM co_attainment where batch = ${passoutYear} ORDER by course_code`;
+    const FETCH_CO_PO_MAPPING_QUERY = `SELECT relation FROM co_po_mapping ORDER BY course_code, co, po`;
+    
+    let copomatrix = [];
+    let record = [];
+
+
+    try {
+       const [copomatrix]  = await db.query(FETCH_CO_PO_MAPPING_QUERY);
+       const [record] = await db.query(FETCH_CO_VALUES_QUERY);
+        // Converting query to array form
+
+        const covalues = arrayer(record);
+        const poMatrix = matrixer(copomatrix);
+
+        const finalpos = []; //Contains final po valuescoValues.length
+
+        for(let i = 0; i < 12; i++)
+        {
+            let interVal = 0;
+            let weightVal = 0;
+            for(let j = 0; j < covalues.length; j++)
+            {
+                interVal += covalues[j] * poMatrix[j * 12 + i]
+                weightVal += poMatrix[j * 12 + i];
+            }
+            finalpos.push(interVal / weightVal)
+        }
+
+        const FEED_PO_VALUES_QUERY = `INSERT INTO po_attainment VALUES(${passoutYear}, ${finalpos[0]}, ${finalpos[1]}, ${finalpos[2]}, ${finalpos[3]}, ${finalpos[4]}, ${finalpos[5]}, ${finalpos[6]}, ${finalpos[7]}, ${finalpos[8]}, ${finalpos[9]}, ${finalpos[10]}, ${finalpos[11]})`;
+        await db.query(FEED_PO_VALUES_QUERY);
+        return res.send({ success: true, message: 'PO values inserted added succesfully' });
+    }catch (error) {
+        console.log(error);
+        res.status(500).send({ success: false, message: err.message });
+    }
+});
 
 module.exports = router;

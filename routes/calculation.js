@@ -24,12 +24,12 @@ function arrayer(coValues) {
     const coArray = [];
     for(let i = 0; i < coValues.length ; i++)
     {
-        coArray[i * 6 + 0] = coValues[i].co1;
-        coArray[i * 6 + 1] = coValues[i].co2;
-        coArray[i * 6 + 2] = coValues[i].co3;
-        coArray[i * 6 + 3] = coValues[i].co4;
-        coArray[i * 6 + 4] = coValues[i].co5;
-        coArray[i * 6 + 5] = coValues[i].co6;
+        coArray.push(coValues[i].co1);
+        coArray.push(coValues[i].co2);
+        coArray.push(coValues[i].co3);
+        coArray.push(coValues[i].co4);
+        coArray.push(coValues[i].co5);
+        coArray.push(coValues[i].co6);
     }
     return coArray;
 }
@@ -38,8 +38,11 @@ function matrixer(copomatrix) {
     const matrix = [];
     for(let i = 0 ; i < copomatrix.length ; i++)
     {
-        matrix[i].push
+        if(i % 12 == 0)
+            matrix[i / 12] = [];
+        matrix[i / 12].push(copomatrix[i].relation);
     }
+    return matrix;
 }
 
 //PO Consolidation Part
@@ -60,37 +63,26 @@ function calculateCOPO(){
         // Converting query to array form
 
         const covalues = arrayer(record);
+        const poMatrix = matrixer(copomatrix);
 
-        const finalpos = []; //Contains final po values
+        const finalpos = []; //Contains final po valuescoValues.length
 
-        let matrixlen = copomatrix.length;
-        let interSum = copomatrix[0].relation * covalues[0];
-        let divSum = copomatrix[0].relation; 
-        for(let i = 1 ; i < matrixlen; i++)
+        for(let i = 0; i < 12; i++)
         {
-            if(i % 6 && i != matrixlen - 1)
+            let interVal = 0;
+            let weightVal = 0;
+            for(let j = 0; j < covalues.length; j++)
             {
-                interSum += copomatrix[i].relation * covalues[i % 6];
-                divSum += copomatrix[i].relation;
-                continue;
+                interVal += covalues[j] * poMatrix[j][i]
+                weightVal += poMatrix[j][i];
             }
-            finalpos.push(interSum / divSum);
-            interSum = copomatrix[i].relation * covalues[i % 6];
-            divSum = copomatrix[i].relation; 
-        }
-        
-        const records = [];
-
-        for(let i = 0; i < finalpos.length; i++) {
-            const row = [i + 1, finalpos[i], courseCode, passoutYear];   // Records in the form po, value, course_code, year
-            records.push(row);
+            finalpos.push(interVal / weightVal)
         }
 
         const FEED_PO_VALUES_QUERY = 'INSERT IGNORE INTO po_attainment VALUES, ?';
         await db.query(FEED_PO_VALUES_QUERY, [records]);
         return res.send({ success: true, message: 'PO values inserted added succesfully' });
-
-    } catch (error) {
+    }catch (error) {
         console.log(error);
         res.status(500).send({ success: false, message: err.message });
     }
