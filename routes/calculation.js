@@ -52,8 +52,10 @@ function calculateCOPO(){
 
         const finalpos = []; //Contains final po values
 
-        let interSum = 0, divSum = 0, matrixlen = copomatrix.length;
-        for(let i = 0 ; i < matrixlen; i++)
+        let matrixlen = copomatrix.length;
+        let interSum = copomatrix[0].relation * covalues[0];
+        let divSum = copomatrix[0].relation; 
+        for(let i = 1 ; i < matrixlen; i++)
         {
             if(i % 6 && i != matrixlen - 1)
             {
@@ -74,6 +76,58 @@ function calculateCOPO(){
         }
 
         const FEED_PO_VALUES_QUERY = 'INSERT IGNORE INTO po_attainment VALUES, ?';
+        await db.query(FEED_PO_VALUES_QUERY, [records]);
+        return res.send({ success: true, message: 'PO values inserted added succesfully' });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ success: false, message: err.message });
+    }
+}
+
+function calculateCOPSO(){
+
+    const {courseCode, passoutYear} = req.body;
+    const FETCH_CO_VALUES_QUERY = `SELECT * FROM co_attainment where course_code = "${courseCode}" and year = "${passoutYear}"`;
+    const FETCH_CO_PO_MAPPING_QUERY = `SELECT relation FROM co_pso_mapping  where course_code = "${courseCode} ORDER BY pso, co"`;
+    
+    let copsomatrix = [];
+    let record = [];
+
+
+    try {
+       const [copomatrix]  = await db.query(FETCH_CO_PO_MAPPING_QUERY);
+       const [record] = await db.query(FETCH_CO_VALUES_QUERY);
+        // Converting query to array form
+
+        const covalues = arrayer(record[0]);
+
+        const finalpsos = []; //Contains final po values
+
+        let matrixlen = copomatrix.length;
+        let interSum = copomatrix[0].relation * covalues[0];
+        let divSum = copomatrix[0].relation; 
+        for(let i = 1 ; i < matrixlen; i++)
+        {
+            if(i % 6 && i != matrixlen - 1)
+            {
+                interSum += copomatrix[i].relation * covalues[i % 6];
+                divSum += copomatrix[i].relation;
+                continue;
+            }
+            finalpos.push(interSum / divSum);
+            interSum = copomatrix[i].relation * covalues[i % 6];
+            divSum = copomatrix[i].relation; 
+        }
+        
+        const records = [];
+
+        for(let i = 0; i < finalpos.length; i++) {
+            const row = [i + 1, finalpos[i], courseCode, passoutYear];   // Records in the form po, value, course_code, year
+            records.push(row);
+        }
+
+        const FEED_PO_VALUES_QUERY = 'INSERT IGNORE INTO pso_attainment VALUES, ?';
         await db.query(FEED_PO_VALUES_QUERY, [records]);
         return res.send({ success: true, message: 'PO values inserted added succesfully' });
 

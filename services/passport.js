@@ -21,7 +21,7 @@ module.exports = function(passport) {
                 const isMatch = await bcrypt.compare(password, user.faculty_password); 
                 
                 if(!isMatch) return done(null, false, { success: false, message: 'Invalid email or password' });
-                return done(null, { id: user.faculty_id, admin: user.admin });
+                return done(null, { id: user.faculty_id, admin: user.admin, name: user.faculty_name });
                 
             } catch(err) {
                 return done(err);
@@ -43,7 +43,7 @@ module.exports = function(passport) {
             const user = rows[0];
 
             if(!user) return next(null, false);;
-            next(null, { id: user.faculty_id, admin: user.admin });
+            next(null, { id: user.faculty_id, admin: user.admin, name: user.faculty_name });
         } catch(err) {
             next(err);
         }

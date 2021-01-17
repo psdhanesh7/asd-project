@@ -42,7 +42,6 @@ router.get('/:courseCode', async (req, res) => {
         copoRecords.forEach(copo => {
             copoMatrix[copo.co - 1].push(copo.relation);
         });
-
         res.send({ success: true, course, copoMatrix });
     } catch (err) {
         res.send({ success: false, message: err.message });
@@ -55,11 +54,9 @@ router.post('/', async (req, res) => {
     const { co1, co2, co3, co4, co5, co6 } = req.body; 
     // console.log(courseCode, courseName, numberOfCos, deptId, semester)
 
-    const copoMatrix = [co1[0], co2[0], co3[0], co4[0], co5[0], co6[0]];
-    const copsoMatrix = [co1[1], co2[1], co3[1], co4[1], co5[1], co6[1]];
+    const copoMatrix = [co1, co2, co3, co4, co5, co6];
 
     const recordp = [];
-    const recordps = [];
 
     for(let i = 0; i < copoMatrix.length; i++) {
         for(let j = 0; j < 12; j++) {
@@ -70,20 +67,10 @@ router.post('/', async (req, res) => {
         }
     }
 
-    for(let i = 0; i < copsoMatrix.length; i++) {
-        for(let j = 0; j < 6; j++) {
-            if(copsoMatrix[i] !== null) {
-                const row = [courseCode, i+1, j+1, copsoMatrix[i][j]];
-                recordps.push(row);
-            }
-        }
-    }
-
     const ADD_COURSE_QUERY = `INSERT INTO course(course_code, course_name, no_of_cos, dept_id, semester) VALUES (?, ?, ?, ?, ?)`;
     const values = [courseCode, courseName, numberOfCos, deptId, semester];
 
     const ADD_CO_PO_MATRIX_QUERY = `INSERT IGNORE INTO co_po_mapping VALUES ?`;
-    const ADD_CO_PSO_MATRIX_QUERY = `INSERT IGNORE INTO co_pso_mapping VALUES ?`;
 
     const connection = await db.getConnection();
     try {
@@ -91,7 +78,6 @@ router.post('/', async (req, res) => {
 
         await connection.query(ADD_COURSE_QUERY, values);
         await connection.query(ADD_CO_PO_MATRIX_QUERY, [recordp]);
-        await connection.query(ADD_CO_PSO_MATRIX_QUERY, [recordps]);
 
         await connection.query('COMMIT');
         await connection.release();
