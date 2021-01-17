@@ -138,10 +138,10 @@ router.post('/endsemexam', upload.single('file'), async (req, res) => {
         
         const records = [];
         
-        // Note : Assumed that all courses have 6 COs
+        // Note : Assumed that all courses have 6 COsbcfbjvngfcp
 
         for(let i = 0; i < markList.length; i++) {
-            
+             
             records.push([ course1, year, markList[i][0], batch, markList[i][1]]);
             records.push([ course2, year, markList[i][0], batch, markList[i][2]]);
             records.push([ course3, year, markList[i][0], batch, markList[i][3]]);
@@ -153,8 +153,8 @@ router.post('/endsemexam', upload.single('file'), async (req, res) => {
 
         console.log(records);
 
-        const ADD_END_SEM_EXAM_MARKS_QUERY = 'INSERT IGNORE INTO assignment_marks VALUES ?';
-        // await db.query(ADD_END_SEM_EXAM_MARKS_QUERY, [records]);
+        const ADD_END_SEM_EXAM_MARKS_QUERY = 'INSERT IGNORE INTO end_sem_exam_marks VALUES ?';
+        await db.query(ADD_END_SEM_EXAM_MARKS_QUERY, [records]);
 
         return res.send({ success: true, message: 'Assignment Marks added succesfully' });
 
