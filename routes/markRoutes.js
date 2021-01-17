@@ -5,11 +5,22 @@ const upload = require('./middlewares/uploadFileMiddleware');
 
 router.post('/internalexam', upload.single('file'), async (req, res) => {
 
+    console.log('Request accepted');
+
     const { courseCode, year, batch, internalExamNo } = req.body;
+
+    console.log(courseCode);
+    console.log(year);
+    console.log(batch);
+    console.log(internalExamNo);
 
     try {
 
+        console.log(req.file);
+
         if (req.file == undefined) return res.status(400).send("Please upload an excel file!");
+
+        console.log('First check passed')
     
         const path = __basedir + "/public/static/assets/uploads/" + req.file.filename;
         const markList = await readXlsxFile(path);
@@ -41,6 +52,8 @@ router.post('/internalexam', upload.single('file'), async (req, res) => {
 
         const ADD_INTERNAL_MARKS_QUERY = 'INSERT IGNORE INTO internal_exam_marks VALUES ?';
         await db.query(ADD_INTERNAL_MARKS_QUERY, [records]);
+
+        console.log('File uploaded succefully');
 
         return res.send({ success: true, message: 'Marks added succesfully' });
 
