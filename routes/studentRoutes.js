@@ -6,11 +6,11 @@ const upload = require('./middlewares/uploadFileMiddleware');
 router.get('/', async (req, res) => {
     
     const { deptId, batch } = req.params;
-
-    if(!deptId || !batch) return res.send({ success: false, message: 'Department or batch year missing' });
+    // if(!deptId || !batch) return res.send({ success: false, message: 'Department or batch year missing' });
 
     try {
-        const GET_STUDENT_LIST_QUERY = `SELECT * FROM student WHERE stud_dept_id = ${deptId} AND passout_year = ${batch}`;
+        // const GET_STUDENT_LIST_QUERY = `SELECT * FROM student WHERE stud_dept_id = ${deptId} AND passout_year = ${batch}`;
+        const GET_STUDENT_LIST_QUERY = `SELECT * FROM student`;
 
         const [ students ] = await db.query(GET_STUDENT_LIST_QUERY);
         return res.send({ success: true, students });
